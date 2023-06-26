@@ -118,6 +118,7 @@ USE_TZ = True
 REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY":"errors",
     'DEFAULT_AUTHENTICATION_CLASSES':[
+        "useraccount.authenticate.CustomTokenAuthentication"  
         
     ],
     'DEFAULT_PERMISSION_CLASSES':[

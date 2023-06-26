@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from .models import User
 from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
-from datetime import timedelta,datetime
+# from rest_framework.authtoken.models import Token
+from useraccount.models import Token
+# from datetime import timedelta,datetime
 
 
 
@@ -11,8 +12,6 @@ class RegisterSerializer(serializers.Serializer):
     password1=serializers.CharField(min_length=5,max_length=100)
     password2=serializers.CharField(min_length=5,max_length=100)
     email=serializers.EmailField()
-    
-    
     def validate_username(self,value):
         user=User.objects.filter(username=value)
         if user:
@@ -47,13 +46,14 @@ class LoginSerializer(serializers.Serializer):
         if username:
             user=authenticate(username=attrs["username"],password=attrs["password"])
             if user:
-                token, _ = Token.objects.get_or_create(user=user)
+                token= Token.objects.create(user=user)               
                 token.save()
                 attrs["token"]=token.key
                 attrs["user"]=user
                 return attrs
-        return serializers.ValidationError("Unable to login")
+        raise serializers.ValidationError("Unable to login")
     
+
     
 
     
