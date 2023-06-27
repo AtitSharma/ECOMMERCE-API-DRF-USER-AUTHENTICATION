@@ -11,6 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 class ProductDetailsView(APIView):
     
     permission_classes=[IsAuthenticated]
+    # authentication_classes=[TokenAuthentication]
     authentication_classes=[JWTAuthentication]
     
     def post(self,request,*args,**kwargs):
