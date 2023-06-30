@@ -6,6 +6,7 @@ from useraccount.models import Token
 
 class CustomTokenAuthentication(TokenAuthentication):
     model=Token
+    
     def authenticate_credentials(self, key):
         model=self.get_model()
         

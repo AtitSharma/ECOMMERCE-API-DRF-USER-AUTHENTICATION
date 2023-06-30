@@ -26,5 +26,6 @@ urlpatterns = [
     # path("gettoken/",TokenObtainPairView.as_view(),name="get_token"),
     # path("gettoken/",CustomGetToken.as_view(),name="get_token"),
     path("refreshtoken/",TokenRefreshView.as_view(),name="refresh_token"),
-    path("verifytoken/",TokenVerifyView.as_view(),name="verify_token")
+    path("verifytoken/",TokenVerifyView.as_view(),name="verify_token"),
+    path('auth/',include('rest_framework.urls',namespace="rest_framework"))
 ]

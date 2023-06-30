@@ -25,7 +25,7 @@ class Token(models.Model):
         return timezone.now() <= expiration_time
     
     def save(self,*args,**kwargs):
-        self.key=uuid.uuid4()
+        self.key=str(uuid.uuid4())
 
         super().save(*args,**kwargs)
     

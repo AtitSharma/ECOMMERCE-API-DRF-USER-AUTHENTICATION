@@ -4,6 +4,7 @@ from product_details.models import Products
 
 
 class ProductSerializer(serializers.Serializer):
+    id=serializers.IntegerField(read_only=True)
     name=serializers.CharField()
     details=serializers.CharField()
     price=serializers.IntegerField()
@@ -18,8 +19,22 @@ class ProductSerializer(serializers.Serializer):
             return Products.objects.create(name=name,details=details,price=price,user=user)
         return serializers.ValidationError("Provide Valid Token ")
     
-
+    def update(self, instance, validated_data):
+        '''
+        THIS WILL WORK WHEN PUT request or PATCH REQUEST IS SENT
+        '''
+        instance.name=validated_data.get('name',instance.name)
+        instance.details=validated_data.get("details",instance.details)
+        instance.price=validated_data.get("price",instance.price)
+        instance.save()
+        return instance
         
+    
+    
+    
+
+
+  
         
     
         
