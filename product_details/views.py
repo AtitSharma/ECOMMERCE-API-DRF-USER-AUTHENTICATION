@@ -68,6 +68,11 @@ class ProductUpdateDelete(APIView):
 
     
     def put(self,request,*args,**kwargs):
+        '''
+        
+            THIS IS TO UPDATE PRODUCTS
+            
+        '''
         product=self.get_object()
         serilaizer=ProductSerializer(product,data=request.data)
         if serilaizer.is_valid():
