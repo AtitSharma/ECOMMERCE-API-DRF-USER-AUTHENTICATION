@@ -7,7 +7,7 @@ from rest_framework import status
 # from rest_framework.authentication import TokenAuthentication
 from .models import Products
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from product_details.permissions import ProductDeletePermission
+from product_details.permissions import ProductDeleteUpdatePermission
 
 class ProductDetailsView(APIView):
     '''
@@ -22,6 +22,9 @@ class ProductDetailsView(APIView):
     
     
     def post(self,request,*args,**kwargs):
+        '''
+            THIS IS TO ADD PRODUCT 
+        '''
         serializer=ProductSerializer(data=request.data,context={'user':request.user})
         if serializer.is_valid():
             serializer.save()
@@ -34,6 +37,9 @@ class ProductDetailsView(APIView):
 
 
     def get(self, request, *args, **kwargs):
+        '''
+            THIS IS TO GET ALL PRODUCTS !!!
+        '''
         products = Products.objects.all()
         serializer = ProductSerializer(instance=products,many=True)
         return Response(serializer.data)
@@ -45,7 +51,7 @@ class ProductUpdateDelete(APIView):
         THIS IS TO UPDATE AND DELETE PRODUCT 
     '''
     authentication_classes=[JWTAuthentication]
-    permission_classes=[ProductDeletePermission]
+    permission_classes=[ProductDeleteUpdatePermission]
     
     def get_object(self):
         '''
@@ -79,7 +85,14 @@ class ProductUpdateDelete(APIView):
             serilaizer.save()
             return Response(serilaizer.data)
         return Response(serilaizer.errors)
+    
+    
+    # def get_permissions(self,request,*args,**kwargs):
+    #     if self.request.method in ["PUT"]:
+    #         print("Hello")
+    #     return []
 
+    
         
     
     
