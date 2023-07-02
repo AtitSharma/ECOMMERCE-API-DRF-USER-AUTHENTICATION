@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from product_details.models import Products
+from product_details.models import Products,Cart
 
 
 
@@ -32,6 +32,41 @@ class ProductSerializer(serializers.Serializer):
     
     
     
+    
+class CartSerializer(serializers.Serializer):
+    id=serializers.IntegerField(read_only=True)
+    name=serializers.CharField(read_only=True)
+    product_id=serializers.IntegerField()
+    product=serializers.CharField(read_only=True)
+    totalprice=serializers.IntegerField(read_only=True)
+    quantity=serializers.IntegerField(read_only=True)
+    
+    
+    
+    def create(self, validated_data):
+        quantity=1
+        product_id=validated_data.get("product_id")
+        product=Products.objects.get(id=product_id)
+        price=Products.objects.get(id=product_id).price
+        totalprice=quantity*price
+        name=self.context.get("name")
+        
+        if name:
+            return Cart.objects.create(name=name,product=product,quantity=quantity,totalprice=totalprice)
+        return serializers.ValidationError("Cannot Add to Cart")
+    
+    
+    def validate_product_id(self, value):
+        product=Products.objects.filter(id=value).first()
+        if not product:
+            return serializers.ValidationError(" No product with such id ")
+        
+        return value
+    
+    
+
+        
+
 
 
   

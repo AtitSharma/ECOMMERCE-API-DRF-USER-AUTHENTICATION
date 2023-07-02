@@ -120,7 +120,7 @@ USE_TZ = True
 REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY":"errors",
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        "useraccount.authenticate.CustomTokenAuthentication"  ,
+        'rest_framework_simplejwt.authentication.JWTAuthentication'  ,
         
     ],
     'DEFAULT_PERMISSION_CLASSES':[
@@ -146,7 +146,7 @@ AUTH_USER_MODEL="useraccount.User"
 
 SIMPLE_JWT = {
   "TOKEN_OBTAIN_SERIALIZER": "useraccount.serializers.CustomJWTtokenCreaterSerializer",
-  "ACCESS_TOKEN_LIFETIME":timedelta(minutes=30),
+  "ACCESS_TOKEN_LIFETIME":timedelta(minutes=60),
   "REFRESH_TOKEN_LIFETIME":timedelta(days=1)
 }
 

@@ -1,13 +1,12 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from .serializers import ProductSerializer
+from rest_framework.permissions import IsAuthenticated,AllowAny,IsAdminUser
+from .serializers import ProductSerializer,CartSerializer
 from rest_framework.response import Response
 from rest_framework import status
-# from rest_framework.authentication import TokenAuthentication
-from .models import Products
+from .models import Products,Cart
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from product_details.permissions import ProductDeleteUpdatePermission
+from product_details.permissions import ProductDeleteUpdatePermission,CartUpdateDeletePermission
 
 class ProductDetailsView(APIView):
     '''
@@ -18,7 +17,7 @@ class ProductDetailsView(APIView):
     
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
-    # authentication_classes=[TokenAuthentication]
+
     
     
     def post(self,request,*args,**kwargs):
@@ -52,6 +51,9 @@ class ProductUpdateDelete(APIView):
     '''
     authentication_classes=[JWTAuthentication]
     permission_classes=[ProductDeleteUpdatePermission]
+    
+    
+
     
     def get_object(self):
         '''
@@ -87,13 +89,90 @@ class ProductUpdateDelete(APIView):
         return Response(serilaizer.errors)
     
     
-    # def get_permissions(self,request,*args,**kwargs):
-    #     if self.request.method in ["PUT"]:
-    #         print("Hello")
-    #     return []
+  
+  
+  
+class AddToCart(APIView):
+
+    
+    def get_object(self):
+        '''
+            THIS VIEW WILL RETURN THE PARTICULAR CART
+        '''
+        product = Cart.objects.filter(pk=self.kwargs.get('pk')).first()
+        self.check_object_permissions(self.request, product) # This will run our CustomPermission
+        return product
+    
+    def get_permissions(self):
+        '''
+            GIVE PERMISSION ACCOURDING TO DIFFRENT RESPONSE
+        '''
+        if self.request.method == "GET":
+            self.permission_classes = [AllowAny]
+        elif self.request.method == "POST":
+            self.permission_classes = [IsAuthenticated | IsAdminUser]
+        elif self.request.method == "DELETE":
+            self.permission_classes = [CartUpdateDeletePermission]
+        return super().get_permissions()
+    
+    
+    def get(self,request,*args,**kwargs):
+        '''
+            Provide cart details of all Cart if no pk is given otherwise It gives accordingly !!!
+        '''
+        self.authentication_classes=[]
+        pk=self.kwargs.get("pk")
+
+        if pk:
+            cart=Cart.objects.filter(pk=pk).first()
+            if cart:
+                serializer=CartSerializer(cart)
+                return Response(serializer.data)
+            return Response({"msg":"No Cart With Such id"})
+        else:
+            cart=Cart.objects.all()
+            serializer=CartSerializer(cart,many=True)
+            return Response(serializer.data)
+            
+    
+    
+    def post(self,request,*args,**kwargs):
+        """
+            ADD the items in the CART on the basis of product id !!!
+        """
+        serializer=CartSerializer(data=request.data,context={"name":request.user.username})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"msg":"Successfully add to cart"})
+        return Response(serializer.errors)
+
+
+    def delete(self, request, *args, **kwargs):
+        '''
+        DELETE THE PARICULAR CART 
+        
+        '''
+        
+        cart=self.get_object()
+        cart.delete()
+        return Response({"msg": "Deleted!!!"})
+        
+    
+    
+    
+    
+        
+        
+    
+
+    
+
 
     
         
     
+
+  
+
     
     
