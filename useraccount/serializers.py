@@ -14,6 +14,9 @@ from django.utils.encoding import force_bytes, force_str
 
 
 class RegisterSerializer(serializers.Serializer):
+    '''
+        THIS IS TO REGISTER A NEW USER 
+    '''
     username=serializers.CharField(max_length=100)
     password1=serializers.CharField(min_length=5,max_length=100)
     password2=serializers.CharField(min_length=5,max_length=100)
@@ -76,10 +79,10 @@ class CustomJWTtokenCreaterSerializer(TokenObtainPairSerializer):
     def validate(self,attrs): 
         # print(self.context) REQUEST IS INSIDE CONTEXT 
         data = super().validate(attrs)
-        refresh = self.get_token(self.user)
+        # refresh = self.get_token(self.user)
         data["user"]=str(self.user)
-        data["refresh"] = str(refresh)
-        data["access"] = str(refresh.access_token)
+        # data["refresh"] = str(refresh)
+        # data["access"] = str(refresh.access_token)
         return data
     
     
@@ -185,6 +188,8 @@ class VerifyUserSerializer(serializers.Serializer):
         user.set_password(new_password)
         user.save()
         return validated_data
+    
+
     
     
     

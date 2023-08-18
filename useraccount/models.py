@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 import uuid
 from datetime import timedelta
 from django.utils import timezone

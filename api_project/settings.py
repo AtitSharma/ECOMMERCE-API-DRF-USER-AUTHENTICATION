@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+# from decouple import config
 from decouple import config
+from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +44,10 @@ INSTALLED_APPS = [
     'useraccount',
     'rest_framework',
     'rest_framework.authtoken',
-    'product_details'
+    'product_details',
+    # 'django.contrib.staticfiles', 
+    'drf_spectacular',
+
 ]
 
 MIDDLEWARE = [
@@ -125,7 +130,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES':[
         "rest_framework.permissions.IsAuthenticated"
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+    # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 
@@ -158,3 +165,31 @@ EMAIL_PORT=587
 EMAIL_HOST_USER=config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD=config("EMAIL_HOST_PASSWORD")
 PASSWORD_RESET_TIMEOUT=14440
+
+
+SPECTACULAR_SETTINGS = {
+    # available SwaggerUI configuration parameters
+    # https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
+    # available SwaggerUI versions: https://github.com/swagger-api/swagger-ui/releases
+    "SWAGGER_UI_DIST": "//unpkg.com/swagger-ui-dist@3.35.1", # default
+    "SWAGGER_UI_FAVICON_HREF": settings.STATIC_URL + "your_company_favicon.png", # default is swagger favicon
+}
+
+# SPECTACULAR_SETTINGS = {
+#     "swagger": "2.0",
+#     "TITLE": "Project Docs",
+#     "DESCRIPTION": "this is description",
+#     "VERSION": "1.0.0",
+#     "SWAGGER_UI_SETTINGS": {
+#         "deepLinking": True,
+#         "persistAuthorization": True,
+#         "displayOperationId": True,
+#     },
+#     # "SWAGGER_UI_DIST": "//unpkg.com/swagger-ui-dist@3.35.1",  # default
+#     # "SWAGGER_UI_FAVICON_HREF": settings.STATIC_URL + "your_company_favicon.png",
+# }

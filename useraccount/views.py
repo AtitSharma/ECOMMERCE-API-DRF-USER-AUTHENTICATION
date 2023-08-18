@@ -7,7 +7,6 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.views import APIView
 from useraccount.models import User,Token
 from rest_framework.authentication import BasicAuthentication,SessionAuthentication
-
 # from rest_framework.authtoken.models import Token
 # from useraccount.models import Token
 from django.contrib.auth import authenticate,login
@@ -21,8 +20,7 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from useraccount.authenticate import CustomTokenAuthentication
-
-
+from rest_framework.generics import GenericAPIView
 
 class RegisterView(APIView):
     permission_classes=[AllowAny]

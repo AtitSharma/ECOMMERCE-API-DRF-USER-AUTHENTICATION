@@ -6,8 +6,8 @@ from .views import (RegisterView,CustomGetToken,
 app_name="user"
 
 urlpatterns = [
-    path("register/",RegisterView.as_view(),name="register"),
     path("login/",UserLogin.as_view(),name="login"),
+    path("register/",RegisterView.as_view(),name="register"),
     path("gettoken/",CustomGetToken.as_view(),name="get_token"),
     path("password-change/",UserPasswordChangeView.as_view(),name="password_change"),
     path("password-reset/",UserPasswordReset.as_view(),name="reset_pass"),
